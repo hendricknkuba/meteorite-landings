@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meteorite Landings - NASA Data</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/map.js" defer></script>
+  <script src="./js/dataHandler.js" type="module" defer></script>
+  <script src="./js/main.js" type="module" defer></script>
+</head>
+<body>
+  <h1>Meteorite Landings - NASA</h1>
+  <div class="container">
+
+    <section class="controls" aria-label="Filtros e Busca">
+      <div class="control-group" id="year-filter-group">
+        <label for="minYear">Min Year</label>
+        <input type="number" id="minYear" placeholder="Ex: 1900" min="860" max="2025" />
+      </div>
+      <div class="control-group" id="year-filter-group-2">
+        <label for="maxYear">Max Year</label>
+        <input type="number" id="maxYear" placeholder="Ex: 2020" min="860" max="2025" />
+      </div>
+      <div class="buttons-group" style="gap: 0.4rem; align-items: flex-start;">
+        <button id="filterYearBtn" type="button" aria-label="Filtrar por ano">Filter</button>
+        <button id="resetFilterBtn" type="button" aria-label="Resetar filtro de ano">Resetar Filtro</button>
+      </div>
+
+    </section>
+
+    <section id="map" role="region" aria-label="Mapa dos meteoritos">
+      <!-- Mapa Google será carregado aqui -->
+    </section>
+
+    <section class="table-wrapper" aria-label="Tabela de meteoritos">
+      <table id="meteoriteTable" aria-describedby="tableInfo">
+        <thead>
+          <tr>
+            <th data-sort-key="id" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por ID">ID</th>
+            <th data-sort-key="name" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por Nome">Nome</th>
+            <th data-sort-key="year" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por Ano">Ano</th>
+            <th data-sort-key="recclass" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por Classe">Class</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Linhas serão inseridas via JS -->
+        </tbody>
+      </table>
+      <div id="tableInfo" class="message" role="status" aria-live="polite" style="display:none;">
+        Nenhum meteorito encontrado.
+      </div>
+    </section>
+
+    <section style="margin-top: 1rem; text-align: right;">
+      <button id="downloadDataBtn" type="button" aria-label="Baixar dados filtrados">Save Filtered List</button>
+    </section>
+  </div>
+  <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "AIzaSyDd0XpW3Svrp0Wzq0WtA8MO08G2TvVxnfo",
+      v: "weekly",
+      // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+      // Add other bootstrap parameters as needed, using camel case.
+    });
+  </script>
+</body>
+</html>
