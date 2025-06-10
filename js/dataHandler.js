@@ -7,7 +7,7 @@ export async function fetchMeteoriteData() {
     meteoriteData = await response.json();
   } catch (error) {
     console.warn("API falhou. Usando arquivo local:", error);
-    const localResponse = await fetch("../data/Meteorite_Landings.json");
+    const localResponse = await fetch("https://raw.githubusercontent.com/hendricknkuba/meteorite-landings/refs/heads/main/data/Meteorite_Landings.json");
     meteoriteData = await localResponse.json();
   }
 
