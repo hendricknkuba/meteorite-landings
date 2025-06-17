@@ -169,6 +169,10 @@ tbody tr:hover {
   font-weight: 700;
 }
 
+tr.highlighted {
+  background-color: #fff3cd; /* amarelo claro */
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .controls {
