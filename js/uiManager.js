@@ -15,7 +15,7 @@ export function renderMeteoriteTable(meteorites) {
     row.innerHTML = `
       <td>${meteorite.id || "N/A"}</td>
       <td>${meteorite.name || "Unknown"}</td>
-      <td>${meteorite.year ? new Date(meteorite.year).getFullYear() : "N/A"}</td>
+      <td>${meteorite.year ? parseInt(meteorite.year) : "N/A"}</td>
       <td>${meteorite.recclass || "N/A"}</td>
     `;
 
