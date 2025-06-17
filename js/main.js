@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const meteorites = data.slice(0, 100);
 
+  allMeteorites = meteorites;
+
   renderMeteoriteTable(meteorites);
   initMap(meteorites);
 
@@ -27,9 +29,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const filtered = allMeteorites.filter((m) => {
-      if (!m.year) return false;
-      const year = new Date(m.year).getFullYear();
-      return year >= minYear && year <= maxYear;
+      const rawYear = m.year;
+      const year = parseInt(rawYear);
+      return !isNaN(year) && year >= minYear && year <= maxYear;
     });
 
     renderMeteoriteTable(filtered);
