@@ -2,11 +2,11 @@ let map;
 
 export async function initMap(meteoriteData = []) {
   try {
-    // Carregar as bibliotecas do Google Maps
+    // Load Google Maps
     const { Map, InfoWindow } = await google.maps.importLibrary("maps");
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-    // Inicializar o mapa
+    // Initialize map
     map = new Map(document.getElementById("map"), {
       zoom: 2,
       center: { lat: 0, lng: 0 },
@@ -19,7 +19,7 @@ export async function initMap(meteoriteData = []) {
       const lat = parseFloat(meteorite.reclat);
       const lng = parseFloat(meteorite.reclong);
 
-      if (isNaN(lat) || isNaN(lng)) return; // Ignora dados inválidos
+      if (isNaN(lat) || isNaN(lng)) return; // Ignore invalid datas
 
       const position = { lat, lng };
 
@@ -39,7 +39,7 @@ export async function initMap(meteoriteData = []) {
         </div>
       `;
 
-      // Listener de clique para mostrar infoWindow
+      // Display InfoWindows
       marker.addListener("gmp-click", () => {
         infoWindow.setContent(content);
         infoWindow.open(map, marker);
