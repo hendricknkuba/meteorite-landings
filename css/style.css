@@ -173,6 +173,17 @@ tr.highlighted {
   background-color: #fff3cd; /* amarelo claro */
 }
 
+#loadingMessage {
+  display: none;
+  background-color: #e0f7fa;
+  border: 1px solid #81d4fa;
+  color: #006064;
+}
+
+button:focus-visible {
+  outline: 2px solid #ffab00;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .controls {
