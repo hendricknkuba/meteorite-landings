@@ -1,8 +1,10 @@
 import { fetchMeteoriteData } from "./dataHandler.js";
 import { renderMeteoriteTable } from "./uiManager.js";
 import { initMap } from "./map.js";
+import { updateSortIcons } from "./uiManager.js";
 
 let allMeteorites = [];
+let currentSort = { key: null, direction: 'asc'}
 
 document.addEventListener("DOMContentLoaded", async () => {
   const data = await fetchMeteoriteData();
@@ -77,4 +79,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     initMap(allMeteorites);
   });
   // Continua o fluxo: render map, render table, etc.
+});
+
+function sortMeteorites(data, key, direction = 'asc') {
+  return data.slice().sort((a, b) => {
+    const valA = a[key];
+    const valB = b[key];
+
+    if (!isNaN(parseFloat(valA)) && !isNaN(parseFloat(valB))) {
+      return direction === 'asc'
+        ? parseFloat(valA) - parseFloat(valB)
+        : parseFloat(valB) - parseFloat(valA);
+    }
+
+    return direction === 'asc'
+      ? String(valA).localeCompare(String(valB))
+      : String(valB).localeCompare(String(valA));
+  });
+}
+
+document.querySelectorAll("#meteoriteTable th[data-sort-key]").forEach((th) => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.sortKey;
+
+    if (currentSort.key === key) {
+      // Toggle direction
+      currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort.key = key;
+      currentSort.direction = 'asc';
+    }
+
+    const sorted = sortMeteorites(allMeteorites, currentSort.key, currentSort.direction);
+    renderMeteoriteTable(sorted);
+    updateSortIcons(currentSort);
+  });
 });
