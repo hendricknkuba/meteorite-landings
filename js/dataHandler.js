@@ -13,7 +13,7 @@ export async function fetchMeteoriteData() {
 
   // Converter strings para tipos apropriados (ex: year como número)
   meteoriteData.forEach(m => {
-    if (m.year) m.year = new Date(m.year).getFullYear();
+    if (m.year) m.year = parseInt(m.year);
     if (m.mass) m.mass = parseFloat(m.mass);
   });
 
