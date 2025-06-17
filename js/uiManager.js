@@ -1,6 +1,6 @@
 export function renderMeteoriteTable(data) {
   const tbody = document.querySelector("#meteoriteTable tbody");
-  tbody.innerHTML = ""; // limpa de uma vez
+  tbody.innerHTML = "";
 
   const fragment = document.createDocumentFragment();
 
