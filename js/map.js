@@ -31,7 +31,7 @@ export async function initMap(meteoriteData = []) {
       const content = `
       <div style="font-family: Arial; font-size: 14px; line-height: 1.4;">
         <strong>${meteorite.name || "Unknown"}</strong><br/>
-        <b>Year:</b> ${meteorite.year ? new Date(meteorite.year).getFullYear() : "N/A"}<br/>
+        <b>Year:</b> ${meteorite.year ? parseInt(meteorite.year) : "N/A"}<br/>
         <b>Class:</b> ${meteorite.recclass || "N/A"}<br/>
         <b>Mass:</b> ${meteorite.mass || "N/A"} g<br/>
         <b>Fall:</b> ${meteorite.fall || "N/A"}
