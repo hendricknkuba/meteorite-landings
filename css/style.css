@@ -1,4 +1,4 @@
-/* Reset básico */
+/* Reset Style */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -21,7 +21,7 @@ h1 {
   text-align: center;
 }
 
-/* Container geral */
+/* General Container */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -30,7 +30,7 @@ h1 {
   gap: 1.5rem;
 }
 
-/* Filtros e busca */
+/* Filter and Search */
 .controls {
   background: #fff;
   padding: 1rem 1.5rem;
@@ -95,7 +95,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Mapa */
+/* Map */
 #map {
   width: 100%;
   height: 400px;
@@ -104,7 +104,7 @@ button:disabled {
   background-color: #e1e4e8; /* fallback bg */
 }
 
-/* Tabela */
+/* Table */
 .table-wrapper {
   overflow-x: auto;
   background: white;
@@ -152,7 +152,7 @@ tbody tr:hover {
   background-color: #f0f8ff;
 }
 
-/* Mensagens */
+/* Message */
 .message {
   padding: 1rem;
   background-color: #fffae6;
@@ -163,14 +163,14 @@ tbody tr:hover {
   text-align: center;
 }
 
-/* Feedback de pesquisa */
+/* Feedback for search */
 .highlight {
   background-color: #ffff8d;
   font-weight: 700;
 }
 
 tr.highlighted {
-  background-color: #fff3cd; /* amarelo claro */
+  background-color: #fff3cd;
 }
 
 #loadingMessage {
@@ -184,7 +184,6 @@ button:focus-visible {
   outline: 2px solid #ffab00;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .controls {
     flex-direction: column;
