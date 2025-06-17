@@ -4,7 +4,7 @@ import { initMap } from "./map.js";
 
 let allMeteorites = [];
 let currentSort = { key: null, direction: 'asc' };
-let currentDisplayedMeteorites = [];  // o array filtrado ou original
+let currentDisplayedMeteorites = [];
 let currentIndex = 0;
 const batchSize = 100;
 
@@ -25,7 +25,7 @@ function renderBatch(data) {
 
   currentIndex += batchSize;
 
-  // Mostrar ou esconder botão "Carregar mais"
+  // Show and hide "Load More button"
   const loadMoreBtn = document.getElementById("loadMoreBtn");
   if (currentIndex < data.length) {
     loadMoreBtn.style.display = "inline-block";
@@ -36,7 +36,6 @@ function renderBatch(data) {
 
 document.getElementById("loadMoreBtn").addEventListener("click", () => {
   renderBatch(currentDisplayedMeteorites);
-  // Atualiza mapa para os meteoritos carregados até agora (opcional)
   initMap(currentDisplayedMeteorites.slice(0, currentIndex));
 });
 
@@ -53,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentDisplayedMeteorites = [...allMeteorites];
     currentIndex = 0;
 
-    // Limpar tabela e renderizar só o primeiro batch
+    // Clean table and display renderizar the first batch
     document.querySelector("#meteoriteTable tbody").innerHTML = "";
     renderBatch(currentDisplayedMeteorites);
     initMap(currentDisplayedMeteorites.slice(0, currentIndex));
