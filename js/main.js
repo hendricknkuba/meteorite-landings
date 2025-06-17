@@ -1,73 +1,138 @@
 import { fetchMeteoriteData } from "./dataHandler.js";
-import { renderMeteoriteTable } from "./uiManager.js";
+import { renderMeteoriteTable, updateSortIcons } from "./uiManager.js";
 import { initMap } from "./map.js";
-import { updateSortIcons } from "./uiManager.js";
 
 let allMeteorites = [];
 let currentSort = { key: null, direction: 'asc' };
-let currentDisplayedMeteorites = [];
+let currentDisplayedMeteorites = [];  // o array filtrado ou original
+let currentIndex = 0;
+const batchSize = 100;
+
+function renderBatch(data) {
+  const slice = data.slice(currentIndex, currentIndex + batchSize);
+  const tbody = document.querySelector("#meteoriteTable tbody");
+
+  slice.forEach(item => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.id || ''}</td>
+      <td>${item.name || ''}</td>
+      <td>${item.year ? parseInt(item.year) : 'N/A'}</td>
+      <td>${item.recclass || 'N/A'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  currentIndex += batchSize;
+
+  // Mostrar ou esconder botão "Carregar mais"
+  const loadMoreBtn = document.getElementById("loadMoreBtn");
+  if (currentIndex < data.length) {
+    loadMoreBtn.style.display = "inline-block";
+  } else {
+    loadMoreBtn.style.display = "none";
+  }
+}
+
+document.getElementById("loadMoreBtn").addEventListener("click", () => {
+  renderBatch(currentDisplayedMeteorites);
+  // Atualiza mapa para os meteoritos carregados até agora (opcional)
+  initMap(currentDisplayedMeteorites.slice(0, currentIndex));
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const data = await fetchMeteoriteData();
+  document.getElementById("loadingMessage").style.display = "block";
+  try {
+    const data = await fetchMeteoriteData();
 
-  const meteorites = data.slice(0, 100);
+    if (!data || data.length === 0) {
+      throw new Error("No meteorite data available.");
+    }
 
-  allMeteorites = meteorites;
+    allMeteorites = data;
+    currentDisplayedMeteorites = [...allMeteorites];
+    currentIndex = 0;
 
-  renderMeteoriteTable(meteorites);
-  currentDisplayedMeteorites = [...meteorites];
-  initMap(meteorites);
+    // Limpar tabela e renderizar só o primeiro batch
+    document.querySelector("#meteoriteTable tbody").innerHTML = "";
+    renderBatch(currentDisplayedMeteorites);
+    initMap(currentDisplayedMeteorites.slice(0, currentIndex));
 
+    document.getElementById("loadingMessage").style.display = "none";
+  } catch (error) {
+    console.error("Failed to initialize app:", error);
+    document.body.innerHTML = `
+      <div style="padding: 2rem; color: red; text-align: center;">
+        <h2>Could not load meteorite data.</h2>
+        <p>Something went wrong. Please refresh the page or try again later.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Filter by Year
   document.getElementById("filterYearBtn").addEventListener("click", () => {
     const minYear = parseInt(document.getElementById("minYear").value);
     const maxYear = parseInt(document.getElementById("maxYear").value);
 
     if (isNaN(minYear) || isNaN(maxYear)) {
-      alert("Preencha os dois campos de ano corretamente.");
+      alert("Please enter valid numbers in both year fields.");
       return;
     }
 
     if (minYear > maxYear) {
-      alert("Ano minimo nao pode ser maior que o ano maximo.");
+      alert("Minimum year cannot be greater than maximum year.");
       return;
     }
 
-    const filtered = allMeteorites.filter((m) => {
-      const rawYear = m.year;
-      const year = parseInt(rawYear);
-      return !isNaN(year) && year >= minYear && year <= maxYear;
+    const filtered = allMeteorites.filter(m => {
+      if (!m.year || isNaN(m.year)) return false;
+      return m.year >= minYear && m.year <= maxYear;
     });
 
-    renderMeteoriteTable(filtered);
-    currentDisplayedMeteorites = [...filtered];
-    initMap(filtered);
+    currentDisplayedMeteorites = filtered;
+    currentIndex = 0;
 
+    document.querySelector("#meteoriteTable tbody").innerHTML = "";
+
+    if (filtered.length === 0) {
+      document.getElementById("tableInfo").style.display = "block";
+      document.getElementById("tableInfo").textContent = `No meteorites found between ${minYear} and ${maxYear}.`;
+      document.getElementById("loadMoreBtn").style.display = "none";
+    } else {
+      document.getElementById("tableInfo").style.display = "none";
+      renderBatch(currentDisplayedMeteorites);
+    }
+
+    initMap(filtered.slice(0, currentIndex));
   });
 
   document.getElementById("resetFilterBtn").addEventListener("click", () => {
     document.getElementById("minYear").value = "";
     document.getElementById("maxYear").value = "";
+    document.getElementById("tableInfo").style.display = "none";
 
     renderMeteoriteTable(allMeteorites);
     currentDisplayedMeteorites = [...allMeteorites];
     initMap(allMeteorites);
   });
 
+  // Search by Name
   document.getElementById("searchNameBtn").addEventListener("click", () => {
     const searchTerm = document.getElementById("searchName").value.trim().toLowerCase();
 
     if (!searchTerm) {
-      alert("Digite um nome para busca.");
+      alert("Please enter a meteorite name to search.");
       return;
     }
 
-    const result = allMeteorites.filter((m) =>
+    const result = allMeteorites.filter(m =>
       m.name && m.name.toLowerCase().includes(searchTerm)
     );
 
     if (result.length === 0) {
       document.getElementById("tableInfo").style.display = "block";
-      document.getElementById("tableInfo").textContent = `Nenhum meteorito encontrado com o nome "${searchTerm}".`;
+      document.getElementById("tableInfo").textContent = `No meteorites found with the name "${searchTerm}".`;
     } else {
       document.getElementById("tableInfo").style.display = "none";
     }
@@ -84,7 +149,54 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentDisplayedMeteorites = [...allMeteorites];
     initMap(allMeteorites);
   });
-  // Continua o fluxo: render map, render table, etc.
+
+  // Sorting
+  document.querySelectorAll("#meteoriteTable th[data-sort-key]").forEach((th) => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sortKey;
+
+      if (currentSort.key === key) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.key = key;
+        currentSort.direction = 'asc';
+      }
+
+      const sorted = sortMeteorites(currentDisplayedMeteorites, currentSort.key, currentSort.direction);
+      currentDisplayedMeteorites = [...sorted];
+      currentIndex = 0;
+      document.querySelector("#meteoriteTable tbody").innerHTML = "";
+      renderBatch(currentDisplayedMeteorites);
+      updateSortIcons(currentSort);
+      initMap(currentDisplayedMeteorites.slice(0, currentIndex));
+    });
+  });
+
+  // Download filtered data
+  document.getElementById("downloadDataBtn").addEventListener("click", () => {
+    if (currentDisplayedMeteorites.length === 0) {
+      alert("No data available to download.");
+      return;
+    }
+
+    try {
+      const jsonString = JSON.stringify(currentDisplayedMeteorites, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      const timestamp = new Date().toISOString().split("T")[0];
+      a.href = url;
+      a.download = `meteorites_filtered_${timestamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed:", err);
+      alert("Failed to download file. Try again.");
+    }
+  });
 });
 
 function sortMeteorites(data, key, direction = 'asc') {
@@ -99,47 +211,7 @@ function sortMeteorites(data, key, direction = 'asc') {
     }
 
     return direction === 'asc'
-      ? String(valA).localeCompare(String(valB))
-      : String(valB).localeCompare(String(valA));
+      ? String(valA || '').localeCompare(String(valB || ''))
+      : String(valB || '').localeCompare(String(valA || ''));
   });
 }
-
-document.querySelectorAll("#meteoriteTable th[data-sort-key]").forEach((th) => {
-  th.addEventListener('click', () => {
-    const key = th.dataset.sortKey;
-
-    if (currentSort.key === key) {
-      // Toggle direction
-      currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-    } else {
-      currentSort.key = key;
-      currentSort.direction = 'asc';
-    }
-
-    const sorted = sortMeteorites(allMeteorites, currentSort.key, currentSort.direction);
-    renderMeteoriteTable(sorted);
-    currentDisplayedMeteorites = [...sorted];
-    updateSortIcons(currentSort);
-  });
-});
-
-document.getElementById("downloadDataBtn").addEventListener("click", () => {
-  if (currentDisplayedMeteorites.length === 0) {
-    alert("Nenhum dado disponível para download.");
-    return;
-  }
-
-  const jsonString = JSON.stringify(currentDisplayedMeteorites, null, 2);
-  const blob = new Blob([jsonString], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  const timestamp = new Date().toISOString().split("T")[0];
-  a.href = url;
-  a.download = `meteorites_filtered_${timestamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-
