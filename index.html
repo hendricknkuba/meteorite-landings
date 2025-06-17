@@ -39,6 +39,8 @@
 
     </section>
 
+    <div id="loadingMessage" class="message" role="status" aria-live="polite">Carregando dados...</div>
+
     <section id="map" role="region" aria-label="Mapa dos meteoritos">
       <!-- Mapa Google será carregado aqui -->
     </section>
@@ -61,6 +63,10 @@
         Nenhum meteorito encontrado.
       </div>
     </section>
+
+    <section style="text-align: center;">
+      <button id="loadMoreBtn" style="display: none;">Carregar mais</button>
+    </section>    
 
     <section style="margin-top: 1rem; text-align: right;">
       <button id="downloadDataBtn" type="button" aria-label="Baixar dados filtrados">Save Filtered List</button>
