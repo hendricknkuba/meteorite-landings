@@ -46,5 +46,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderMeteoriteTable(allMeteorites);
     initMap(allMeteorites);
   });
+
+  document.getElementById("searchNameBtn").addEventListener("click", () => {
+    const searchTerm = document.getElementById("searchName").value.trim().toLowerCase();
+
+    if (!searchTerm){
+      alert("Digite um nome para busca.");
+      return;
+    }
+
+    const result = allMeteorites.filter((m) =>
+      m.name && m.name.toLowerCase().includes(searchTerm)
+    );
+
+    if (result.length === 0) {
+      document.getElementById("tableInfo").style.display = "block";
+      document.getElementById("tableInfo").textContent = `Nenhum meteorito encontrado com o nome "${searchTerm}".`;
+    } else {
+      document.getElementById("tableInfo").style.display = "none";
+    }
+
+    renderMeteoriteTable(result);
+    initMap(result);
+  });
+
+  document.getElementById("resetSearchBtn").addEventListener("click", () => {
+    document.getElementById("searchName").value = "";
+    document.getElementById("tableInfo").style.display = "none";
+    renderMeteoriteTable(allMeteorites);
+    initMap(allMeteorites);
+  });
   // Continua o fluxo: render map, render table, etc.
 });
