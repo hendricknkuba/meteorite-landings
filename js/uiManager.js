@@ -25,7 +25,7 @@ export function renderMeteoriteTable(data) {
 export function updateSortIcons(currentSort) {
   const headers = document.querySelectorAll('#meteoriteTable th[data-sort-key]');
   if (!headers.length) {
-    console.warn("Cabeçalhos da tabela não encontrados.");
+    console.warn("Table header not found.");
     return;
   }
 
