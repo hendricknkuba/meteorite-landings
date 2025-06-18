@@ -47,13 +47,13 @@ export async function initMap(meteoriteData = []) {
     });
 
   } catch (error) {
-    console.error("Erro ao carregar o mapa:", error);
+    console.error("Error loading map.:", error);
     const mapContainer = document.getElementById("map");
     if (mapContainer) {
       mapContainer.innerHTML = `
         <div style="color: red; padding: 1rem; text-align: center;">
-          <p>Não foi possível carregar o mapa.</p>
-          <p>Verifique sua conexão ou tente novamente mais tarde.</p>
+          <p>It was not possible to load map..</p>
+          <p>Check your internet  connection and try again later.</p>
         </div>
       `;
     }
