@@ -25,7 +25,7 @@
       </div>
       <div class="buttons-group" style="gap: 0.4rem; align-items: flex-start;">
         <button id="filterYearBtn" type="button" aria-label="Filtrar por ano">Filter</button>
-        <button id="resetFilterBtn" type="button" aria-label="Resetar filtro de ano">Resetar Filtro</button>
+        <button id="resetFilterBtn" type="button" aria-label="Reset Filter">Reset Filter</button>
       </div>
 
       <div class="control-group" id="name-search-group">
@@ -33,43 +33,43 @@
         <input type="text" id="searchName" placeholder="Ex: Abee" />
       </div>
       <div class="buttons-group" style="gap: 0.4rem; align-items: flex-start;">
-        <button id="searchNameBtn" type="button" aria-label="Buscar meteoritos por nome">Search</button>
-        <button id="resetSearchBtn" type="button" aria-label="Limpar busca por nome">Clear Search</button>
+        <button id="searchNameBtn" type="button" aria-label="Search meteorite by nome">Search</button>
+        <button id="resetSearchBtn" type="button" aria-label="Clear Search">Clear Search</button>
       </div>
 
     </section>
 
-    <div id="loadingMessage" class="message" role="status" aria-live="polite">Carregando dados...</div>
+    <div id="loadingMessage" class="message" role="status" aria-live="polite">Loading data...</div>
 
-    <section id="map" role="region" aria-label="Mapa dos meteoritos">
-      <!-- Mapa Google será carregado aqui -->
+    <section id="map" role="region" aria-label="Meteorite Map">
+      <!-- Google Maps -->
     </section>
 
-    <section class="table-wrapper" aria-label="Tabela de meteoritos">
+    <section class="table-wrapper" aria-label="Meteorite Table">
       <table id="meteoriteTable" aria-describedby="tableInfo">
         <thead>
           <tr>
-            <th data-sort-key="id" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por ID">ID</th>
-            <th data-sort-key="name" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por Nome">Nome</th>
-            <th data-sort-key="year" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por Ano">Ano</th>
-            <th data-sort-key="recclass" tabindex="0" role="button" aria-pressed="false" aria-label="Ordenar por Classe">Class</th>
+            <th data-sort-key="id" tabindex="0" role="button" aria-pressed="false" aria-label="Order By ID">ID</th>
+            <th data-sort-key="name" tabindex="0" role="button" aria-pressed="false" aria-label="Order By Name">Name</th>
+            <th data-sort-key="year" tabindex="0" role="button" aria-pressed="false" aria-label="Order By Year">Year</th>
+            <th data-sort-key="recclass" tabindex="0" role="button" aria-pressed="false" aria-label="Order by Class">Class</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Linhas serão inseridas via JS -->
+          <!-- Table will be displayed here. -->
         </tbody>
       </table>
       <div id="tableInfo" class="message" role="status" aria-live="polite" style="display:none;">
-        Nenhum meteorito encontrado.
+        No meteorite found.
       </div>
     </section>
 
     <section style="text-align: center;">
-      <button id="loadMoreBtn" style="display: none;">Carregar mais</button>
-    </section>    
+      <button id="loadMoreBtn" style="display: none;">Load more</button>
+    </section>
 
     <section style="margin-top: 1rem; text-align: right;">
-      <button id="downloadDataBtn" type="button" aria-label="Baixar dados filtrados">Save Filtered List</button>
+      <button id="downloadDataBtn" type="button" aria-label="Save Filtered List">Save Filtered List</button>
     </section>
   </div>
   <script>
